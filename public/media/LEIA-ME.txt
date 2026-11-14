@@ -1,0 +1,7 @@
+Coloque aqui os arquivos reais da Igreja Batista do Marapé:
+
+hero-poster.jpg  → imagem de capa do vídeo (ideal: 1920x1080 ou equivalente)
+hero.mp4         → vídeo de fundo sem áudio, comprimido para web
+
+Se os arquivos não existirem, o hero exibirá um gradiente escuro (e o vídeo falhará sem bloquear a página).
+As fotografias externas usadas em outras seções são provisórias e devem ser substituídas por material autorizado da igreja.
