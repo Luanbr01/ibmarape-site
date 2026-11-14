@@ -53,6 +53,7 @@ const siteSettings = defineType({
     name: "siteSettings",
     title: "Personalização do site",
     type: "document",
+    description: "Altere um campo, clique em Publicar e atualize a homepage. As animações só reiniciam quando você rola a página novamente; para testar, recarregue no topo.",
     groups: [
         { name: "typography", title: "Tipografia", default: true },
         { name: "motion", title: "Animações" },
@@ -62,7 +63,7 @@ const siteSettings = defineType({
         defineField({
             name: "heroTitleSize",
             title: "Tamanho máximo do título principal (px)",
-            description: "Padrão: 76 px. O valor é adaptado automaticamente para telas pequenas.",
+            description: "Título 'Uma igreja viva adorando ao Deus vivo.' no vídeo da primeira tela. Ex.: 50 = menor; 90 = maior. É um LIMITE MÁXIMO: em telas estreitas o tamanho se ajusta à largura. Não muda o nome da igreja no menu. Publique e atualize a homepage.",
             type: "number",
             group: "typography",
             initialValue: 76,
@@ -71,7 +72,7 @@ const siteSettings = defineType({
         defineField({
             name: "sectionTitleSize",
             title: "Tamanho máximo dos títulos das seções (px)",
-            description: "Padrão: 56 px.",
+            description: "Títulos como 'Ministérios', 'Mensagens', 'Eventos' e 'Nossa história'. Ex.: 40 = menores; 70 = maiores. Não altera o tamanho dos cards nem dos textos menores. Padrão 56 px. Publique e atualize a homepage.",
             type: "number",
             group: "typography",
             initialValue: 56,
@@ -80,7 +81,7 @@ const siteSettings = defineType({
         defineField({
             name: "animationDuration",
             title: "Duração das animações de entrada (segundos)",
-            description: "Padrão: 0,85 s. Controla os elementos que aparecem ao rolar a página.",
+            description: "Tempo do fade + subida dos elementos ao rolar a página (data-reveal). 0,3 = rápido; 0,85 = normal; 1,5 = lento. NÃO muda o vídeo, os efeitos do menu, nem a velocidade do scroll. Para comparar, publique, recarregue no TOPO e role até uma seção ainda não revelada.",
             type: "number",
             group: "motion",
             initialValue: 0.85,
@@ -89,7 +90,7 @@ const siteSettings = defineType({
         defineField({
             name: "animationDistance",
             title: "Distância de entrada dos elementos (px)",
-            description: "Padrão: 35 px. Use 0 para apenas aparecer, sem deslocamento.",
+            description: "Quanto a foto/texto sobe ao aparecer durante a rolagem. 0 = só dissolve; 35 = subida discreta; 80 = subida maior. Afeta apenas elementos com data-reveal, uma vez por carregamento. Publique e recarregue antes de testar.",
             type: "number",
             group: "motion",
             initialValue: 35,
@@ -98,7 +99,7 @@ const siteSettings = defineType({
         defineField({
             name: "sectionSpacing",
             title: "Espaçamento vertical das seções (px)",
-            description: "Padrão: 110 px. A versão mobile usa um espaçamento proporcional.",
+            description: "Espaço ACIMA e ABAIXO de seções como Bem-vindo, Ministérios, Mensagens e Eventos. 60 = página mais compacta; 110 = atual; 160 = mais vazia. NÃO altera a altura do vídeo principal nem todos os blocos especiais, como História/rodapé. Mobile utiliza proporção menor.",
             type: "number",
             group: "layout",
             initialValue: 110,

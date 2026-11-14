@@ -94,10 +94,20 @@ export function normalizeSiteSettings(input: SiteSettingsInput | null): SiteSett
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
-    const data = await fetchSafe<SiteSettingsInput>(
-        `*[_type == "siteSettings" && _id == "siteSettings"][0]{
-          heroTitleSize, sectionTitleSize, animationDuration, animationDistance, sectionSpacing
-        }`
-    );
-    return normalizeSiteSettings(data);
+    if (!sanityClient) return normalizeSiteSettings(null);
+    try {
+        // Leitura direta da API sem cache: mudanças publicadas no Studio
+        // ficam visíveis na próxima atualização da página.
+        const data = await sanityClient.withConfig({ useCdn: false }).fetch<SiteSettingsInput | null>(
+            `*[_type == "siteSettings" && _id == "siteSettings"][0]{
+              heroTitleSize, sectionTitleSize, animationDuration, animationDistance, sectionSpacing
+            }`,
+            {},
+            { cache: "no-store" }
+        );
+        return normalizeSiteSettings(data);
+    } catch (error) {
+        console.error("[Sanity] Não foi possível carregar a personalização:", error);
+        return normalizeSiteSettings(null);
+    }
 }

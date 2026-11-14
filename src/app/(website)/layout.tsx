@@ -14,14 +14,18 @@ export default async function WebsiteLayout({ children }: { children: ReactNode 
     } as CSSProperties;
 
     return (
-        <div className="website-shell" style={designVars}>
+        <>
+            {/* O cabeçalho fica fora do wrapper do conteúdo para que o
+                position: fixed não seja afetado por camadas/efeitos do hero. */}
             <Header />
-            {children}
-            <Footer />
-            <MotionProvider
-                duration={settings.animationDuration}
-                distance={settings.animationDistance}
-            />
-        </div>
+            <div className="website-shell" style={designVars}>
+                {children}
+                <Footer />
+                <MotionProvider
+                    duration={settings.animationDuration}
+                    distance={settings.animationDistance}
+                />
+            </div>
+        </>
     );
 }
