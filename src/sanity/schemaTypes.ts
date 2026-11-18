@@ -111,4 +111,54 @@ const siteSettings = defineType({
     },
 });
 
-export const schemaTypes = [link, home, ministry, message, event, siteSettings];
+
+// Conteúdo institucional editável da página Nossa História.
+const historyPage = defineType({
+    name: "historyPage",
+    title: "Nossa História — Apresentação",
+    type: "document",
+    fields: [
+        defineField({ name: "title", title: "Título principal", type: "string", initialValue: "Nossa História" }),
+        defineField({ name: "introduction", title: "Introdução (opcional)", type: "text", rows: 4,
+            description: "Texto breve exibido sobre a fotografia de abertura." }),
+        imageField("cover", "Fotografia de abertura"),
+        defineField({ name: "coverAlt", title: "Descrição acessível da fotografia", type: "string" }),
+    ],
+    preview: { prepare: () => ({ title: "Nossa História — Apresentação" }) },
+});
+
+const historyMilestone = defineType({
+    name: "historyMilestone",
+    title: "Nossa História — Marcos da timeline",
+    type: "document",
+    orderings: [
+        { title: "Ordem cronológica", name: "yearAsc", by: [
+            { field: "year", direction: "asc" },
+            { field: "order", direction: "asc" }
+        ] },
+    ],
+    fields: [
+        defineField({ name: "year", title: "Ano", type: "number",
+            description: "Ex.: 1980. Cadastre apenas datas verificadas pela igreja.",
+            validation: rule => rule.required().integer().min(1800).max(2200) }),
+        defineField({ name: "title", title: "Título do acontecimento", type: "string",
+            validation: rule => rule.required() }),
+        defineField({ name: "description", title: "Descrição do acontecimento", type: "text", rows: 5 }),
+        imageField("image", "Fotografia histórica (opcional)"),
+        defineField({ name: "imageAlt", title: "Descrição acessível da fotografia", type: "string" }),
+        defineField({ name: "imageCaption", title: "Legenda da fotografia", type: "string" }),
+        defineField({ name: "order", title: "Ordem dentro do mesmo ano", type: "number",
+            description: "Opcional. Utilize 1, 2, 3... caso existam vários acontecimentos no mesmo ano.",
+            initialValue: 0, validation: rule => rule.integer().min(0) }),
+    ],
+    preview: {
+        select: { title: "title", year: "year", media: "image" },
+        prepare: ({ title, year, media }) => ({
+            title: title || "Marco histórico",
+            subtitle: year ? String(year) : "Ano não informado",
+            media,
+        }),
+    },
+});
+
+export const schemaTypes = [link, home, ministry, message, event, siteSettings, historyPage, historyMilestone];

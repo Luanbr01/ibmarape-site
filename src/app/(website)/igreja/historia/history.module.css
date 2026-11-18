@@ -1,0 +1,41 @@
+.page{background:#f6f6f6;color:#292929}
+.hero{min-height:72svh;position:relative;display:flex;align-items:end;overflow:hidden;background:radial-gradient(circle at 75% 35%,#28485b,#171f29 65%)}
+.heroImage{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.7}
+.heroShade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,20,29,.85),rgba(12,20,29,.24)),linear-gradient(0deg,rgba(12,20,29,.7),transparent 65%)}
+.heroInner{position:relative;z-index:1;padding-top:180px;padding-bottom:100px;color:#fff}
+.kicker,.sectionLabel{font-size:12px;letter-spacing:.2em;font-weight:800;color:#00b9ff}
+.hero h1{font-family:Arial,sans-serif;font-weight:900;font-size:clamp(52px,9vw,128px);letter-spacing:-.06em;line-height:.95;margin:22px 0;max-width:1000px}
+.intro{font-size:clamp(17px,2vw,22px);max-width:680px;line-height:1.6;color:#e4e4e4}
+.explore{display:inline-flex;gap:24px;margin-top:32px;padding:15px 0;border-bottom:1px solid #8a9aa4;font-weight:700}
+.explore:hover,.closingLink:hover{color:#00b9ff}
+.timelineSection{padding:110px 0 120px}
+.timelineIntroduction{text-align:center;max-width:900px;margin-bottom:110px}
+.timelineIntroduction h2,.closing h2{font-family:Arial,sans-serif;font-size:clamp(36px,5.5vw,72px);letter-spacing:-.05em;line-height:1.1;margin:18px 0;font-weight:900}
+.blue{color:#00b9ff}
+.timelineLayout{display:grid;grid-template-columns:90px minmax(0,1fr);gap:42px}
+.yearNavigation{position:sticky;top:140px;align-self:start;max-height:70vh;overflow:auto;padding-bottom:10px}
+.yearNavigation p{font-size:11px;letter-spacing:.2em;color:#777;font-weight:800}
+.yearList{display:flex;flex-direction:column;align-items:start;gap:9px}
+.yearButton,.yearActive{border:0;background:transparent;font-size:15px;font-weight:700;color:#777;cursor:pointer;padding:7px 8px;border-left:2px solid transparent;text-align:left}
+.yearActive{color:#008dbb;border-left-color:#00b9ff}
+.yearButton:hover{color:#242424}
+.entries{position:relative}
+.spine{position:absolute;top:12px;bottom:10px;left:50%;width:2px;background:linear-gradient(#00b9ff,#929da3,#00b9ff);transform:translateX(-50%)}
+.entry{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:90px;margin-bottom:120px;min-height:200px}
+.entry:last-child{margin-bottom:0}
+.entryContent{grid-column:1;max-width:510px}
+.entryRight .entryContent{grid-column:2}
+.marker{position:absolute;top:24px;left:50%;width:15px;height:15px;border:4px solid #00b9ff;background:#292929;border-radius:50%;transform:translateX(-50%);z-index:1;box-shadow:0 0 0 8px #f6f6f6}
+.yearDisplay{font-size:clamp(48px,7vw,96px);font-weight:900;line-height:1;letter-spacing:-.06em;color:#00a4da;margin:0 0 24px}
+.figure{margin:0 0 26px}
+.figure img{display:block;width:100%;max-height:460px;object-fit:cover;border-radius:9px}
+.figure figcaption{font-size:12px;color:#686868;margin-top:10px}
+.entry h3{font-size:clamp(25px,3vw,39px);letter-spacing:-.04em;line-height:1.15;margin:0 0 18px;font-weight:900}
+.entry p{font-size:17px;line-height:1.7;color:#555;white-space:pre-line}
+.empty{text-align:center;max-width:700px;padding:75px 30px;background:#fff;border:1px solid #e5e5e5;border-radius:12px}
+.empty p{font-size:18px;color:#555}
+.closing{padding:110px 0 130px;background:#292929;color:white}
+.closingLink{display:inline-flex;gap:60px;margin-top:28px;border-bottom:1px solid #aaa;padding-bottom:15px;font-weight:700}
+@media(max-width:900px){.timelineLayout{grid-template-columns:1fr;gap:22px}.yearNavigation{position:relative;top:auto;max-height:none}.yearList{flex-direction:row;overflow-x:auto;padding-bottom:8px}.entries{margin-left:7px}.spine,.marker{left:9px}.entry{grid-template-columns:1fr;gap:0;margin-bottom:70px;padding-left:40px}.entryContent,.entryRight .entryContent{grid-column:1;max-width:100%}.heroInner{padding-top:160px;padding-bottom:85px}.timelineIntroduction{margin-bottom:70px}}
+@media(max-width:600px){.timelineSection{padding:75px 0}.hero{min-height:65svh}.hero h1{font-size:clamp(44px,12vw,72px)}.entry p{font-size:16px}.entry{padding-left:32px}.yearDisplay{font-size:54px}.closing{padding:80px 0}}
+@media(prefers-reduced-motion:reduce){.explore,.closingLink,.yearButton,.yearActive{scroll-behavior:auto}}
