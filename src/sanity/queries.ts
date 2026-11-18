@@ -111,3 +111,31 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         return normalizeSiteSettings(null);
     }
 }
+
+/** Página histórica e marcos, ordenados por ano e ordem manual. */
+export type HistoryPageContent = {
+    title?: string;
+    introduction?: string;
+    cover?: string;
+    coverAlt?: string;
+};
+export type HistoryMilestone = {
+    _id: string;
+    year: number;
+    title: string;
+    description?: string;
+    image?: string;
+    imageAlt?: string;
+    imageCaption?: string;
+};
+export function getHistoryPage() {
+    return fetchSafe<HistoryPageContent>(`*[_type == "historyPage"] | order(_updatedAt desc)[0]{
+        title, introduction, "cover": cover.asset->url, coverAlt
+    }`);
+}
+export function getHistoryMilestones() {
+    return fetchSafe<HistoryMilestone[]>(`*[_type == "historyMilestone" && defined(year) && defined(title)]
+      | order(year asc, order asc, _createdAt asc) {
+        _id, year, title, description, "image": image.asset->url, imageAlt, imageCaption
+    }`);
+}
