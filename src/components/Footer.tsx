@@ -1,2 +1,26 @@
 import Link from "next/link";
-export function Footer() { return <footer className="site-footer"><div className="container footer-main"><Link href="/" aria-label="Início"><img src="/logo-completo-branco.png" alt="Igreja Batista do Marapé" className="footer-logo"/></Link><nav aria-label="Links do rodapé"><Link href="/igreja">A Igreja</Link><Link href="/ministerios">Ministérios</Link><Link href="/mensagens">Mensagens</Link><Link href="/eventos">Eventos</Link><Link href="/contato">Contato</Link></nav></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} Igreja Batista do Marapé</span><span>Uma igreja viva adorando ao Deus vivo.</span></div></footer>; }
+
+export function Footer() {
+  return (
+    <footer className="site-footer">
+      <div className="container footer-main">
+        <Link href="/" aria-label="Início">
+          <img src="/logo-completo-branco.png" alt="Igreja Batista do Marapé" className="footer-logo" />
+        </Link>
+        <nav aria-label="Links do rodapé">
+          <Link href="/igreja">Quem Somos</Link>
+          <Link href="/igreja/historia">Nossa História</Link>
+          <Link href="/igreja/declaracao-doutrinaria">O que Cremos</Link>
+          <Link href="/ministerios">Ministérios</Link>
+          <Link href="/mensagens">Mensagens</Link>
+          <Link href="/boletim">Boletim</Link>
+          <Link href="/ao-vivo">Ao vivo</Link>
+        </nav>
+      </div>
+      <div className="container footer-bottom">
+        <span>© {new Date().getFullYear()} Igreja Batista do Marapé</span>
+        <span>Uma igreja viva adorando ao Deus vivo.</span>
+      </div>
+    </footer>
+  );
+}

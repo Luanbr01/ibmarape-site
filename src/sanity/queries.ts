@@ -3,12 +3,14 @@ export type Ministry = {
     title: string;
     slug: string;
     summary?: string;
+    descriptionText?: string;
     cover?: string;
 };
 export type Message = {
     title: string;
     slug: string;
     videoUrl?: string;
+    speaker?: string;
     cover?: string;
     publishedAt?: string;
 };
@@ -22,36 +24,69 @@ export type ChurchEvent = {
 };
 export type HomeContent = {
     title?: string;
-    welcomeTitle?: string;
-    welcomeText?: string;
     heroPoster?: string;
     heroVideo?: string;
+    welcomeEnabled?: boolean;
+    welcomeTitle?: string;
+    welcomeText?: string;
     welcomePhoto?: string;
-    messagePhoto?: string;
-    eventPhoto?: string;
-    historyPhoto?: string;
+    ministriesEnabled?: boolean;
+    ministriesTitle?: string;
     featuredMinistries?: Ministry[];
+    messagesEnabled?: boolean;
+    messagesTitle?: string;
+    messagesText?: string;
     featuredMessage?: Message;
+    messagePhoto?: string;
+    eventsEnabled?: boolean;
+    eventsTitle?: string;
+    eventsText?: string;
+    featuredEvents?: ChurchEvent[];
+    eventPhoto?: string;
+    historyEnabled?: boolean;
+    historyTitle?: string;
+    historyPhoto?: string;
+    finalEnabled?: boolean;
+    finalTitle?: string;
+    finalPhoto?: string;
 };
 async function fetchSafe<T>(query: string): Promise<T | null> { if (!sanityClient)
     return null; try {
-    return await sanityClient.fetch<T>(query, {}, { next: { revalidate: 60 } });
+    return await sanityClient.withConfig({ useCdn: false }).fetch<T>(query, {}, { cache: "no-store" });
 }
 catch (err) {
     console.error("[Sanity] Consulta falhou:", err);
     return null;
 } }
 export function getHomeContent() {
-    return fetchSafe<HomeContent>(`*[_type=="homePage"]|order(_updatedAt desc)[0]{title,welcomeTitle,welcomeText,
- "heroPoster":heroPoster.asset->url,"heroVideo":coalesce(heroVideoFile.asset->url,heroVideoUrl),
- "welcomePhoto":welcomePhoto.asset->url,"messagePhoto":messagePhoto.asset->url,
- "eventPhoto":eventPhoto.asset->url,"historyPhoto":historyPhoto.asset->url,
- "featuredMinistries":featuredMinistries[]->{title,"slug":slug.current,summary,"cover":cover.asset->url},
- "featuredMessage":featuredMessage->{title,"slug":slug.current,videoUrl,"cover":cover.asset->url,publishedAt}
-}`);
+    return fetchSafe<HomeContent>(`*[_type == "homePage"] | order(_updatedAt desc)[0]{
+        title, welcomeTitle, welcomeText, welcomeEnabled,
+        ministriesEnabled, ministriesTitle,
+        messagesEnabled, messagesTitle, messagesText,
+        eventsEnabled, eventsTitle, eventsText,
+        historyEnabled, historyTitle,
+        finalEnabled, finalTitle,
+        "heroPoster": heroPoster.asset->url,
+        "heroVideo": coalesce(heroVideoFile.asset->url, heroVideoUrl),
+        "welcomePhoto": welcomePhoto.asset->url,
+        "messagePhoto": messagePhoto.asset->url,
+        "eventPhoto": eventPhoto.asset->url,
+        "historyPhoto": historyPhoto.asset->url,
+        "finalPhoto": finalPhoto.asset->url,
+        "featuredMinistries": featuredMinistries[]->{
+            title, "slug": slug.current, summary, "cover": cover.asset->url
+        },
+        "featuredMessage": featuredMessage->{
+            title, "slug": slug.current, videoUrl, "cover": cover.asset->url, publishedAt
+        },
+        "featuredEvents": featuredEvents[]->{
+            title, "slug": slug.current, startsAt, description,
+            "cover": cover.asset->url, registrationUrl
+        }
+    }`);
 }
-export function getMinistries() { return fetchSafe<Ministry[]>(`*[_type=="ministry" && defined(slug.current)]|order(title asc){title,"slug":slug.current,summary,"cover":cover.asset->url}`); }
-export function getMessages() { return fetchSafe<Message[]>(`*[_type=="message" && defined(slug.current)]|order(publishedAt desc){title,"slug":slug.current,videoUrl,"cover":cover.asset->url,publishedAt}`); }
+export function getMinistries() { return fetchSafe<Ministry[]>(`*[_type=="ministry" && defined(slug.current)]|order(title asc){title,"slug":slug.current,summary,"descriptionText": pt::text(description),"cover":cover.asset->url}`); }
+export function getMessages() { return fetchSafe<Message[]>(`*[_type=="message" && defined(slug.current)]|order(publishedAt desc){title,"slug":slug.current,videoUrl,speaker,"cover":cover.asset->url,publishedAt}`); }
 export function getEvents() { return fetchSafe<ChurchEvent[]>(`*[_type=="event" && defined(slug.current)]|order(startsAt asc){title,"slug":slug.current,startsAt,description,"cover":cover.asset->url,registrationUrl}`); }
 
 
@@ -96,10 +131,11 @@ export function normalizeSiteSettings(input: SiteSettingsInput | null): SiteSett
 export async function getSiteSettings(): Promise<SiteSettings> {
     if (!sanityClient) return normalizeSiteSettings(null);
     try {
+        // Compatível com documento singleton e com IDs aleatórios criados antes.
         // Leitura direta da API sem cache: mudanças publicadas no Studio
         // ficam visíveis na próxima atualização da página.
         const data = await sanityClient.withConfig({ useCdn: false }).fetch<SiteSettingsInput | null>(
-            `*[_type == "siteSettings" && _id == "siteSettings"][0]{
+            `*[_type == "siteSettings"] | order(_updatedAt desc)[0]{
               heroTitleSize, sectionTitleSize, animationDuration, animationDistance, sectionSpacing
             }`,
             {},
@@ -110,4 +146,19 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         console.error("[Sanity] Não foi possível carregar a personalização:", error);
         return normalizeSiteSettings(null);
     }
+}
+
+/** Eventos históricos cadastrados manualmente. Nunca gera datas ou fatos fictícios. */
+export type HistoryMilestone = { _id: string; year: number; title: string; description?: string; photo?: string };
+export type HistoryPageData = { eyebrow?: string; title?: string; introduction?: string; cover?: string };
+export type Bulletin = { _id: string; title: string; publishedAt: string; summary?: string; fileUrl?: string; cover?: string };
+
+export function getHistoryPage() {
+    return fetchSafe<HistoryPageData>(`*[_type == "historyPage" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{eyebrow,title,introduction,"cover":cover.asset->url}`);
+}
+export function getHistoryMilestones() {
+    return fetchSafe<HistoryMilestone[]>(`*[_type == "historyMilestone" && !(_id in path("drafts.**")) && defined(year)] | order(year asc, order asc, _createdAt asc){_id,year,title,description,"photo":photo.asset->url}`);
+}
+export function getBulletins() {
+    return fetchSafe<Bulletin[]>(`*[_type == "bulletin" && !(_id in path("drafts.**"))] | order(publishedAt desc){_id,title,publishedAt,summary,"fileUrl":file.asset->url,"cover":cover.asset->url}`);
 }

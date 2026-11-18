@@ -28,6 +28,12 @@ export default defineConfig({
                     S.documentTypeListItem("ministry").title("Ministérios"),
                     S.documentTypeListItem("message").title("Mensagens"),
                     S.documentTypeListItem("event").title("Eventos"),
+                    S.documentTypeListItem("bulletin").title("Boletins"),
+                    S.divider(),
+                    S.listItem().title("Nossa História · Apresentação").child(
+                        S.document().schemaType("historyPage").documentId("historyPage").title("Nossa História · Apresentação")
+                    ),
+                    S.documentTypeListItem("historyMilestone").title("Nossa História · Linha do tempo"),
                 ]),
         }),
     ], schema: { types: schemaTypes }

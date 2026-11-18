@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Header } from "@/components/Header";
+import { SiteSettingsDiagnostics } from "@/components/SiteSettingsDiagnostics";
 import { Footer } from "@/components/Footer";
 import { MotionProvider } from "@/components/MotionProvider";
 import { getSiteSettings } from "@/sanity/queries";
@@ -21,6 +22,7 @@ export default async function WebsiteLayout({ children }: { children: ReactNode 
             <div className="website-shell" style={designVars}>
                 {children}
                 <Footer />
+                <SiteSettingsDiagnostics settings={settings} />
                 <MotionProvider
                     duration={settings.animationDuration}
                     distance={settings.animationDistance}
