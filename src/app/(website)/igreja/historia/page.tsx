@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { HistoryTimeline } from "@/components/HistoryTimeline";
 import { getHistoryMilestones, getHistoryPage } from "@/sanity/queries";
 
 export const metadata: Metadata = { title: "Nossa História | Igreja Batista do Marapé" };
@@ -30,19 +31,7 @@ export default async function HistoryPage() {
               <p>Os acontecimentos e fotografias serão publicados pela equipe da igreja.</p>
             </div>
           ) : (
-            <ol className="history-timeline" aria-label="Cronologia da Igreja Batista do Marapé">
-              {milestones.map((event, index) => (
-                <li className={`timeline-event ${index % 2 === 0 ? "left" : "right"}`} key={event._id} data-reveal>
-                  <div className="timeline-dot" aria-hidden="true" />
-                  <article className="timeline-card">
-                    <div className="timeline-year">{event.year}</div>
-                    {event.photo && <div className="timeline-photo" style={{ backgroundImage: `url("${event.photo}")` }} role="img" aria-label={`Imagem de ${event.title}`} />}
-                    <h3>{event.title}</h3>
-                    {event.description && <p>{event.description}</p>}
-                  </article>
-                </li>
-              ))}
-            </ol>
+            <HistoryTimeline milestones={milestones} />
           )}
         </div>
       </section>
