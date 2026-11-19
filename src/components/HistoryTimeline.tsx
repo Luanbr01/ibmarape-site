@@ -46,7 +46,7 @@ export function HistoryTimeline({ milestones }: Props) {
     setActiveIndex(index);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     eventRefs.current[index]?.scrollIntoView({
-      behavior: reduceMotion ? "instant" : "smooth",
+      behavior: reduceMotion ? "auto" : "smooth",
       block: "center",
     });
   };
